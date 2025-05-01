@@ -26,6 +26,13 @@ jobs:
             - name: Set up Docker Compose
               uses: docker/setup-qemu-action@v3
 
+            - name: Criar arquivo .env
+              run: |
+                echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+                echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
+                echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+                echo "DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}" >> .env
+
             - name: Build Docker Compose
               run: docker compose -f docker-compose.yml up -d --build
 
