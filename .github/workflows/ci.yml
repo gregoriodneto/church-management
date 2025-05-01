@@ -1,0 +1,30 @@
+name: CI Pipeline
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+        branches: [ main ]
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout codigo
+              run: actions/checkout@v4
+
+            - name: Set up Docker BuildX
+              run: docker/setup-buildx-action@v3
+
+            - name: Set up Docker Compose
+              run: docker/setup-qemu-action@v3
+
+            - name: Build Docker Compose
+              run: docker compose -f docker-compose.yml up -d --build
+
+            - name: Verificar Containers
+              run: docker ps
+
+            - name: Esperar o app subir
+              run: sleep 10
