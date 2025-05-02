@@ -76,6 +76,9 @@ jobs:
               sudo systemctl start docker
               sudo systemctl enable docker
 
+              echo "Entrar na pasta do projeto"
+              cd /home/${{ secrets.SSH_USER }}/app
+
               echo "Puxar e rodar o container"
               echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
               echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" >> .env
