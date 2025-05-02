@@ -83,5 +83,5 @@ jobs:
               echo "DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}" >> .env
             
               echo "Subir containers"
-              docker compose up -d --build
+              docker compose -f docker-compose.yml up -d --build
             EOF
