@@ -90,6 +90,9 @@ jobs:
               echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
               echo "DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}" >> .env
             
+              echo "Parar containers antigos"
+              sudo docker-compose down --remove-orphans
+
               echo "Subir containers"
               sudo docker-compose -f docker-compose.yml up -d --build
             EOF
