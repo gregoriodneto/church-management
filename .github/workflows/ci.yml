@@ -76,6 +76,11 @@ jobs:
               sudo systemctl start docker
               sudo systemctl enable docker
 
+              echo "Instalar docker-compose"
+              sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" \
+                -o /usr/local/bin/docker-compose
+              sudo chmod +x /usr/local/bin/docker-compose
+
               echo "Entrar na pasta do projeto"
               cd /home/${{ secrets.SSH_USER }}/app
 
@@ -86,5 +91,5 @@ jobs:
               echo "DATABASE_URL=postgres://${{ secrets.POSTGRES_USER }}:${{ secrets.POSTGRES_PASSWORD }}@postgres:5432/${{ secrets.POSTGRES_DB }}" >> .env
             
               echo "Subir containers"
-              sudo docker compose -f docker-compose.yml up -d --build
+              sudo docker-compose -f docker-compose.yml up -d --build
             EOF
