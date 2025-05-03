@@ -8,8 +8,111 @@ datasource db {
 }
 
 model Church {
-  id        String   @id @default(uuid())
-  name      String
-  address   String
-  createdAt DateTime @default(now())
+  id                String        @id @default(uuid())
+
+  name              String  
+  foundationDate    String  
+  role              ChurchRole?
+
+  parentChurchId    String?
+  parentChurch      Church?       @relation("ChurchRelations", fields: [parentChurchId], references: [id])
+  relatedChurches   Church[]      @relation("ChurchRelations")
+
+  addressChurchId   String?       @unique
+  address           Address?      @relation("AddressChurch", fields: [addressChurchId], references: [id])
+
+  contactChurchId   String?       @unique   
+  contact           Contact?      @relation("ContactChurch", fields: [contactChurchId], references: [id])
+
+  churchFinance     Finance[]     @relation("FinanceChurch")
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model Member {
+  id                    String        @id @default(uuid())
+
+  name                  String
+  dateOfBirth           String
+  age                   Int
+  positionInTheChurch   PositionInTheChurch[]
+
+  addressMemberId       String?
+  address               Address?      @relation("AddressMember", fields: [addressMemberId], references: [id])
+
+  contactMemberId       String?     
+  contact               Contact?      @relation("ContactMember", fields: [contactMemberId], references: [id])
+
+  memberFinance         Finance[]     @relation("FinanceMember")
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+}
+
+model Finance {
+  id                    String        @id @default(uuid())
+
+  description           TypeContribution
+  value                 Float
+
+  receiverChurchId      String?
+  church                Church?       @relation("FinanceChurch", fields: [receiverChurchId], references: [id])
+
+  contributorMemberId   String?
+  member                Member?       @relation("FinanceMember", fields: [contributorMemberId], references: [id])
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+
+  @@index([receiverChurchId])
+  @@index([contributorMemberId])
+}
+
+model Address {
+  id                String        @id @default(uuid())
+
+  street            String
+  numberStreet      String
+  district          String
+  city              String
+  state             String  
+
+  churchAddress     Church?       @relation("AddressChurch")
+  memberAddress     Member[]      @relation("AddressMember")
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+model Contact {
+  id                String        @id @default(uuid())
+
+  numberContact     String[]
+  email             String?
+
+  memberContact     Member[]      @relation("ContactMember")
+  churchContact     Church?      @relation("ContactChurch")
+
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+}
+
+enum ChurchRole {
+  SEDE
+  CONGREGACAO
+  PONT_DE_PREGACAO
+}
+
+enum TypeContribution {
+  DIZIMO
+  CONTRIBUICAO
+}
+
+enum PositionInTheChurch {
+  NONE
+  PASTOR
+  LIDER
+  REGENTE
+  BANDA
 }
