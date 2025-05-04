@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateFinanceDto } from './dto/create-finance.dto';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class FinancesService {
-  create(createFinanceDto: CreateFinanceDto) {
-    return 'This action adds a new finance';
+  constructor(private readonly prisma: PrismaService) {}
+
+  create(data: CreateFinanceDto) {
+    return this.prisma.finance.create({ data });
   }
 
   findAll() {
-    return `This action returns all finances`;
+    return this.prisma.finance.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} finance`;
+  findOne(id: string) {
+    return this.prisma.finance.findUnique({ where: { id } });
   }
 
-  update(id: number, updateFinanceDto: UpdateFinanceDto) {
-    return `This action updates a #${id} finance`;
+  update(id: string, data: UpdateFinanceDto) {
+    return this.prisma.finance.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} finance`;
+  remove(id: string) {
+    return this.prisma.finance.delete({ where: { id } });
   }
 }
