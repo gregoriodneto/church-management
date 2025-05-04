@@ -11,7 +11,7 @@ model Church {
   id                String        @id @default(uuid())
 
   name              String  
-  foundationDate    String  
+  foundationDate    DateTime  
   role              ChurchRole?
 
   parentChurchId    String?
@@ -26,6 +26,8 @@ model Church {
 
   churchFinance     Finance[]     @relation("FinanceChurch")
 
+  churchDiary       Diary?        @relation("ChurchDiary")
+
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 }
@@ -34,7 +36,7 @@ model Member {
   id                    String        @id @default(uuid())
 
   name                  String
-  dateOfBirth           String
+  dateOfBirth           DateTime
   age                   Int
   churchMember          ChurchMember[]
   churchMinistry        ChurchMinistry[]
@@ -69,6 +71,36 @@ model Finance {
 
   @@index([receiverChurchId])
   @@index([contributorMemberId])
+}
+
+model Diary {
+  id                    String        @id @default(uuid())
+
+  churchId              String?       @unique
+  church                Church?       @relation("ChurchDiary", fields: [churchId], references: [id])
+
+  diaryEvent            Event[]       @relation("EventDiary")
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
+}
+
+model Event {
+  id                    String        @id @default(uuid())
+
+  title                 String
+  description           String
+  date                  DateTime
+  location              String?
+  isPublic              Boolean @default(false)
+  type                  TypeEvent[]  
+  status                StatusEvent?
+
+  diaryId               String?
+  diary                 Diary?       @relation("EventDiary", fields: [diaryId], references: [id])
+
+  createdAt             DateTime      @default(now())
+  updatedAt             DateTime      @updatedAt
 }
 
 model Address {
@@ -142,4 +174,26 @@ enum ChurchDepartament {
   MUSICA
   HOMENS
   MULHERES
+}
+
+enum TypeEvent {
+  CULTO
+  REUNIAO
+  FESTA
+  ANIVERSARIO
+  EVANGELISMO
+  VIGILIA
+  ESTUDO_BIBLICO
+  BATISMO
+  SANTA_CEIA
+  EVENTO_INFANTIL
+  EVENTO_JOVENS
+  EVENTO_SENHORAS
+}
+
+enum StatusEvent {
+  PLANEJADO
+  EM_ANDAMENTO
+  CONCLUIDO
+  CANCELADO
 }
