@@ -1,11 +1,11 @@
-import { IsOptional, IsString, IsEnum, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsEnum, IsUUID, IsDateString } from 'class-validator';
 import { ChurchRole } from '@prisma/client';
 
 export class CreateChurchDto {
     @IsString()
     name: string;
 
-    @IsString()
+    @IsDateString()
     foundationDate: string;
 
     @IsOptional()

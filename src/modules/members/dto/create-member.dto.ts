@@ -1,16 +1,24 @@
-import { IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
-import { PositionInTheChurch } from '@prisma/client';
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { ChurchMinistry, ChurchMember, ChurchDepartament } from '@prisma/client';
 
 export class CreateMemberDto {
     @IsString()
     name: string;
 
-    @IsString()
+    @IsDateString()
     dateOfBirth: string;
 
     @IsOptional()
-    @IsEnum(PositionInTheChurch)
-    positionInTheChurch?: PositionInTheChurch;
+    @IsEnum(ChurchMinistry)
+    churchMinistry?: ChurchMinistry[];
+
+    @IsOptional()
+    @IsEnum(ChurchMember)
+    churchMember?: ChurchMember[];
+
+    @IsOptional()
+    @IsEnum(ChurchDepartament)
+    churchDepartament?: ChurchDepartament[];
 
     @IsOptional()
     @IsUUID()
@@ -18,5 +26,5 @@ export class CreateMemberDto {
 
     @IsOptional()
     @IsUUID()
-    contactMemberId?: string;
+    contactMemberId: string;
 }

@@ -7,13 +7,15 @@ import { FinancesModule } from './modules/finances/finances.module';
 import { MembersModule } from './modules/members/members.module';
 import { ContactModule } from './modules/contact/contact.module';
 import { AddressModule } from './modules/address/address.module';
+import { DiaryModule } from './modules/diary/diary.module';
+import { EventModule } from './modules/event/event.module';
 
 @Module({
   imports: [
     ChurchModule, 
     DashboardModule, 
     FinancesModule, 
-    MembersModule, AddressModule, ContactModule
+    MembersModule, AddressModule, ContactModule, DiaryModule, EventModule
   ],
   controllers: [AppController],
   providers: [AppService],
