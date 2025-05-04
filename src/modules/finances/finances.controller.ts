@@ -19,16 +19,16 @@ export class FinancesController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.financesService.findOne(+id);
+    return this.financesService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateFinanceDto: UpdateFinanceDto) {
-    return this.financesService.update(+id, updateFinanceDto);
+    return this.financesService.update(id, updateFinanceDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.financesService.remove(+id);
+    return this.financesService.remove(id);
   }
 }

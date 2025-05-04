@@ -19,16 +19,16 @@ export class ChurchController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.churchService.findOne(+id);
+    return this.churchService.findOne(id);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateChurchDto: UpdateChurchDto) {
-    return this.churchService.update(+id, updateChurchDto);
+    return this.churchService.update(id, updateChurchDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.churchService.remove(+id);
+    return this.churchService.remove(id);
   }
 }

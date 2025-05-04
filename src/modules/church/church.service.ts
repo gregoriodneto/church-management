@@ -1,26 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { CreateChurchDto } from './dto/create-church.dto';
 import { UpdateChurchDto } from './dto/update-church.dto';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class ChurchService {
-  create(createChurchDto: CreateChurchDto) {
-    return 'This action adds a new church';
+  constructor(private prisma: PrismaService) {}
+
+  create(data: CreateChurchDto) {
+    return this.prisma.church.create({ data });
   }
 
   findAll() {
-    return `This action returns all church`;
+    return this.prisma.church.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} church`;
+  findOne(id: string) {
+    return this.prisma.church.findUnique({ where: { id } });;
   }
 
-  update(id: number, updateChurchDto: UpdateChurchDto) {
-    return `This action updates a #${id} church`;
+  update(id: string, data: UpdateChurchDto) {
+    return this.prisma.church.update({ where: { id }, data });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} church`;
+  remove(id: string) {
+    return this.prisma.church.delete({ where: { id } });
   }
 }

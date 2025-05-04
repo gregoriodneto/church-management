@@ -36,7 +36,9 @@ model Member {
   name                  String
   dateOfBirth           String
   age                   Int
-  positionInTheChurch   PositionInTheChurch[]
+  churchMember          ChurchMember[]
+  churchMinistry        ChurchMinistry[]
+  churchDepartament     ChurchDepartament[]
 
   addressMemberId       String?
   address               Address?      @relation("AddressMember", fields: [addressMemberId], references: [id])
@@ -99,20 +101,45 @@ model Contact {
 }
 
 enum ChurchRole {
+  MATRIZ
   SEDE
   CONGREGACAO
-  PONT_DE_PREGACAO
+  PONTO_DE_PREGACAO
 }
 
 enum TypeContribution {
   DIZIMO
-  CONTRIBUICAO
+  OFERTA
+  DIZIMO_NAO_DECLARADO
+  DOACOES
 }
 
-enum PositionInTheChurch {
-  NONE
-  PASTOR
+enum ChurchMember {
+  NONE  
   LIDER
   REGENTE
-  BANDA
+  MUSICO
+  PREGADOR  
+  LIMPEZA
+  FINANCEIRO
+  SECRETARIO
+}
+
+enum ChurchMinistry {
+  NONE
+  PASTOR
+  EVANGELISTA
+  PRESBITERO
+  DIACONO
+  AUXILIAR
+}
+
+enum ChurchDepartament {
+  INFANTIL
+  ADOLESCENTE
+  JOVENS
+  ENSINO
+  MUSICA
+  HOMENS
+  MULHERES
 }

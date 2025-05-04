@@ -2,6 +2,9 @@ import { IsInt, IsOptional, IsString, IsUUID } from 'class-validator';
 
 export class Church {
     @IsString()
+    name: string;
+
+    @IsString()
     dateOfBirth: string;
 
     @IsInt()

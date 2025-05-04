@@ -1,11 +1,17 @@
 -- CreateEnum
-CREATE TYPE "ChurchRole" AS ENUM ('SEDE', 'CONGREGACAO', 'PONT_DE_PREGACAO');
+CREATE TYPE "ChurchRole" AS ENUM ('MATRIZ', 'SEDE', 'CONGREGACAO', 'PONTO_DE_PREGACAO');
 
 -- CreateEnum
-CREATE TYPE "TypeContribution" AS ENUM ('DIZIMO', 'CONTRIBUICAO');
+CREATE TYPE "TypeContribution" AS ENUM ('DIZIMO', 'OFERTA', 'DIZIMO_NAO_DECLARADO', 'DOACOES');
 
 -- CreateEnum
-CREATE TYPE "PositionInTheChurch" AS ENUM ('NONE', 'PASTOR', 'LIDER', 'REGENTE', 'BANDA');
+CREATE TYPE "ChurchMember" AS ENUM ('NONE', 'LIDER', 'REGENTE', 'MUSICO', 'PREGADOR', 'LIMPEZA', 'FINANCEIRO', 'SECRETARIO');
+
+-- CreateEnum
+CREATE TYPE "ChurchMinistry" AS ENUM ('NONE', 'PASTOR', 'EVANGELISTA', 'PRESBITERO', 'DIACONO', 'AUXILIAR');
+
+-- CreateEnum
+CREATE TYPE "ChurchDepartament" AS ENUM ('INFANTIL', 'ADOLESCENTE', 'JOVENS', 'ENSINO', 'MUSICA', 'HOMENS', 'MULHERES');
 
 -- CreateTable
 CREATE TABLE "Church" (
@@ -28,7 +34,9 @@ CREATE TABLE "Member" (
     "name" TEXT NOT NULL,
     "dateOfBirth" TEXT NOT NULL,
     "age" INTEGER NOT NULL,
-    "positionInTheChurch" "PositionInTheChurch"[],
+    "churchMember" "ChurchMember"[],
+    "churchMinistry" "ChurchMinistry"[],
+    "churchDepartament" "ChurchDepartament"[],
     "addressMemberId" TEXT,
     "contactMemberId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
