@@ -26,4 +26,25 @@ export class ChurchService {
   remove(id: string) {
     return this.prisma.church.delete({ where: { id } });
   }
+
+  async getAllDecendantChurches(rootId: string): Promise<string[]> {
+    const descendantIds: string[] = [];
+
+    const queue: string[] = [rootId];
+
+    while(queue.length > 0) {
+      const currentId = queue.shift()!;
+      descendantIds.push(currentId);
+
+      const children = await this.prisma.church.findMany({
+        where: { parentChurchId: currentId },
+        select: { id: true }
+      });
+
+      const childIds = children.map(child => child.id);
+      queue.push(...childIds);
+    }
+
+    return descendantIds;
+  }
 }
