@@ -28,6 +28,8 @@ model Church {
 
   churchDiary       Diary?        @relation("ChurchDiary")
 
+  churchMember      Member[]     @relation("ChurchMember")
+
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 }
@@ -47,6 +49,9 @@ model Member {
 
   contactMemberId       String?     
   contact               Contact?      @relation("ContactMember", fields: [contactMemberId], references: [id])
+
+  churchMemberId        String?
+  church                Church?      @relation("ChurchMember", fields: [churchMemberId], references: [id])
 
   memberFinance         Finance[]     @relation("FinanceMember")
 

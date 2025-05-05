@@ -1,26 +1,48 @@
-import { Injectable } from '@nestjs/common';
-import { CreateDashboardDto } from './dto/create-dashboard.dto';
-import { UpdateDashboardDto } from './dto/update-dashboard.dto';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'prisma/prisma.service';
 
 @Injectable()
 export class DashboardService {
-  create(createDashboardDto: CreateDashboardDto) {
-    return 'This action adds a new dashboard';
-  }
+  constructor(private readonly prisma: PrismaService) {}
 
-  findAll() {
-    return `This action returns all dashboard`;
-  }
+  async financialSummary(churchId: string, year: number, month: number) {
+    const startDate = new Date(year, month - 1, 1);
+    const endDate = new Date(year, month, 1);
 
-  findOne(id: number) {
-    return `This action returns a #${id} dashboard`;
-  }
+    const church = await this.prisma.church.findUnique({ where: { id: churchId } })
+    if (!church) {
+      throw new NotFoundException('Igreja não encontrada');
+    }
 
-  update(id: number, updateDashboardDto: UpdateDashboardDto) {
-    return `This action updates a #${id} dashboard`;
-  }
+    const finances = await this.prisma.finance.findMany({
+      where: {
+        receiverChurchId: churchId,
+        createdAt: {
+          gte: startDate,
+          lt: endDate
+        }
+      },
+      include: {
+        church: {
+          select: {
+            name: true,
+            role: true,
+          },
+        },
+      },
+      orderBy: {
+        createdAt: 'desc'
+      }
+    });
 
-  remove(id: number) {
-    return `This action removes a #${id} dashboard`;
+    return ({
+      church: church.name,
+      tipo_igreja: church.role,
+      finances: finances.map(f => ({
+        descricao: f.description,
+        valor: f.value,
+        data_operacao: f.createdAt
+      }))
+    });
   }
 }

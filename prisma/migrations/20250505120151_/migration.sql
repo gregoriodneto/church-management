@@ -45,6 +45,7 @@ CREATE TABLE "Member" (
     "churchDepartament" "ChurchDepartament"[],
     "addressMemberId" TEXT,
     "contactMemberId" TEXT,
+    "churchMemberId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -145,6 +146,9 @@ ALTER TABLE "Member" ADD CONSTRAINT "Member_addressMemberId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "Member" ADD CONSTRAINT "Member_contactMemberId_fkey" FOREIGN KEY ("contactMemberId") REFERENCES "Contact"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Member" ADD CONSTRAINT "Member_churchMemberId_fkey" FOREIGN KEY ("churchMemberId") REFERENCES "Church"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Finance" ADD CONSTRAINT "Finance_receiverChurchId_fkey" FOREIGN KEY ("receiverChurchId") REFERENCES "Church"("id") ON DELETE SET NULL ON UPDATE CASCADE;
