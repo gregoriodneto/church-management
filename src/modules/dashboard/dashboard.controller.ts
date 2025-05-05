@@ -13,4 +13,11 @@ export class DashboardController {
   ) {
     return this.dashboardService.financialSummary(churchId, +year, +month);
   }
+
+  @Get('top-five-financial-church')
+  topFiveFinancialChurch(
+    @Query('churchId') churchId: string,
+  ) {
+    return this.dashboardService.topFiveFinancialChurch(churchId);
+  }
 }

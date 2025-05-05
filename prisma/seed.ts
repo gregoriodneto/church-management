@@ -37,6 +37,80 @@ async function main() {
         },
     });
 
+    // Endereço da igreja
+    const churchAddressSede1 = await prisma.address.create({
+        data: {
+        street: 'Rua da Fé 2',
+        numberStreet: '100',
+        district: 'Centro',
+        city: 'São Paulo',
+        state: 'SP',
+        },
+    });
+
+    // Contato da igreja
+    const churchContactSede1 = await prisma.contact.create({
+        data: {
+        numberContact: ['+5511987654321'],
+        email: 'igrejaSede1@exemplo.com',
+        },
+    });
+
+    // Igreja principal
+    const churchSede1 = await prisma.church.create({
+        data: {
+        name: 'Igreja Sede1',
+        foundationDate: new Date('1995-01-01'),
+        role: ChurchRole.SEDE,
+        address: {
+            connect: { id: churchAddress.id },
+        },
+        contact: {
+            connect: { id: churchContact.id },
+        },
+        parentChurch: {
+            connect: { id: church.id }
+        }
+        },
+    });
+
+    // Endereço da igreja
+    const churchAddressSede2 = await prisma.address.create({
+        data: {
+        street: 'Rua da Fé 3',
+        numberStreet: '100',
+        district: 'Centro',
+        city: 'São Paulo',
+        state: 'SP',
+        },
+    });
+
+    // Contato da igreja
+    const churchContactSede2 = await prisma.contact.create({
+        data: {
+        numberContact: ['+5511987654321'],
+        email: 'igrejaSede2@exemplo.com',
+        },
+    });
+
+    // Igreja principal
+    const churchSede2 = await prisma.church.create({
+        data: {
+        name: 'Igreja Sede2',
+        foundationDate: new Date('1995-01-01'),
+        role: ChurchRole.SEDE,
+        address: {
+            connect: { id: churchAddress.id },
+        },
+        contact: {
+            connect: { id: churchContact.id },
+        },
+        parentChurch: {
+            connect: { id: church.id }
+        }
+        },
+    });
+
     // Diário da igreja
     const diary = await prisma.diary.create({
         data: {
@@ -140,6 +214,39 @@ async function main() {
         value: 300.00,
         church: {
             connect: { id: church.id },
+        },
+        },
+    });
+
+    // Financeiro - igreja recebe
+    await prisma.finance.create({
+        data: {
+        description: TypeContribution.OFERTA,
+        value: 300.00,
+        church: {
+            connect: { id: churchSede1.id },
+        },
+        },
+    });
+
+    // Financeiro - igreja recebe
+    await prisma.finance.create({
+        data: {
+        description: TypeContribution.OFERTA,
+        value: 300.00,
+        church: {
+            connect: { id: churchSede1.id },
+        },
+        },
+    });
+
+    // Financeiro - igreja recebe
+    await prisma.finance.create({
+        data: {
+        description: TypeContribution.OFERTA,
+        value: 300.00,
+        church: {
+            connect: { id: churchSede2.id },
         },
         },
     });
