@@ -7,6 +7,9 @@ import { AllExceptionsFilter } from './common/filters/http-exception.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.setGlobalPrefix('api');
+  app.enableCors();
+
   const config = new DocumentBuilder()
     .setTitle('API da Church Management')
     .setDescription('Documentação da API de gerenciamento de Igrejas')

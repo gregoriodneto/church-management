@@ -1,6 +1,9 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { ChurchMinistry, ChurchMember, ChurchDepartament } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
+import { CreateAddressDto } from 'src/modules/address/dto/create-address.dto';
+import { CreateContactDto } from 'src/modules/contact/dto/create-contact.dto';
 
 export class CreateMemberDto {
     @ApiProperty({
@@ -70,4 +73,14 @@ export class CreateMemberDto {
     @IsOptional()
     @IsUUID()
     churchMemberId: string;
+
+    @ApiProperty()
+    @ValidateNested()
+    @Type(() => CreateAddressDto)
+    address: CreateAddressDto;
+
+    @ApiProperty()
+    @ValidateNested()
+    @Type(() => CreateContactDto)
+    contact: CreateContactDto;
 }

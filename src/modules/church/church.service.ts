@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateChurchDto } from './dto/create-church.dto';
 import { UpdateChurchDto } from './dto/update-church.dto';
 import { PrismaService } from 'prisma/prisma.service';
@@ -7,8 +7,35 @@ import { PrismaService } from 'prisma/prisma.service';
 export class ChurchService {
   constructor(private prisma: PrismaService) {}
 
-  create(data: CreateChurchDto) {
-    return this.prisma.church.create({ data });
+  async create(data: CreateChurchDto) {
+    if (data.role !== 'MATRIZ' && !data.parentChurchId) {
+      throw new NotFoundException('Como não é Matriz, informar uma Matriz!');
+    }
+    return this.prisma.$transaction(async (tx) => {
+      const address = await tx.address.create({
+        data: data.address
+      });
+
+      const contact = await tx.contact.create({
+        data: {
+          email: data.contact.email,
+          numberContact: { set: data.contact.numberContact }
+        }
+      });
+
+      const church = await tx.church.create({
+        data: {
+          name: data.name,
+          foundationDate: new Date(data.foundationDate),
+          role: data.role,
+          parentChurchId: data.parentChurchId ?? null,
+          addressChurchId: address.id,
+          contactChurchId: contact.id
+        }
+      });
+
+      return church;
+    });
   }
 
   findAll() {
@@ -20,10 +47,44 @@ export class ChurchService {
   }
 
   update(id: string, data: UpdateChurchDto) {
-    return this.prisma.church.update({ where: { id }, data });
+    return this.prisma.$transaction(async (tx) => {
+      const church = await tx.church.findUniqueOrThrow({
+        where: { id },
+        include: {
+          address: true,
+          contact: true
+        }
+      });
+
+      if (data.address) {
+        await tx.address.update({
+          where: { id: church.addressChurchId! },
+          data: data.address
+        });
+      }
+
+      if (data.contact) {
+        await tx.contact.update({
+          where: { id: church.contactChurchId! },
+          data: {
+            email: data.contact.email,
+            numberContact: { set: data.contact.numberContact }
+          }
+        });
+      }
+
+      const { address, contact, ...churchData } = data;
+
+      return tx.church.update({
+        where: { id },
+        data: {
+          ...churchData
+        }
+      });
+    });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
     return this.prisma.church.delete({ where: { id } });
   }
 
