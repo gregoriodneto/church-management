@@ -30,6 +30,8 @@ model Church {
 
   churchMember      Member[]     @relation("ChurchMember")
 
+  churchFinanceSummary     FinanceSummary[]
+
   createdAt         DateTime      @default(now())
   updatedAt         DateTime      @updatedAt
 }
@@ -137,6 +139,26 @@ model Contact {
   updatedAt         DateTime      @updatedAt
 }
 
+model FinanceSummary {
+  id              String   @id @default(uuid())
+  month           Int
+  year            Int
+  saldoAnterior   Float
+  entradas        Float
+  gastos          Float
+  saldoMensal     Float
+  saldoAtual      Float
+  patrimonio      Float
+
+  churchId        String
+  church          Church   @relation(fields: [churchId], references: [id])
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@unique([month, year, churchId])
+}
+
 enum ChurchRole {
   MATRIZ
   SEDE
@@ -149,6 +171,7 @@ enum TypeContribution {
   OFERTA
   DIZIMO_NAO_DECLARADO
   DOACOES
+  GASTO_MENSAL
 }
 
 enum ChurchMember {

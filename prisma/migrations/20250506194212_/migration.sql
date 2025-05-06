@@ -2,7 +2,7 @@
 CREATE TYPE "ChurchRole" AS ENUM ('MATRIZ', 'SEDE', 'CONGREGACAO', 'PONTO_DE_PREGACAO');
 
 -- CreateEnum
-CREATE TYPE "TypeContribution" AS ENUM ('DIZIMO', 'OFERTA', 'DIZIMO_NAO_DECLARADO', 'DOACOES');
+CREATE TYPE "TypeContribution" AS ENUM ('DIZIMO', 'OFERTA', 'DIZIMO_NAO_DECLARADO', 'DOACOES', 'GASTO_MENSAL');
 
 -- CreateEnum
 CREATE TYPE "ChurchMember" AS ENUM ('NONE', 'LIDER', 'REGENTE', 'MUSICO', 'PREGADOR', 'LIMPEZA', 'FINANCEIRO', 'SECRETARIO');
@@ -117,6 +117,24 @@ CREATE TABLE "Contact" (
     CONSTRAINT "Contact_pkey" PRIMARY KEY ("id")
 );
 
+-- CreateTable
+CREATE TABLE "FinanceSummary" (
+    "id" TEXT NOT NULL,
+    "month" INTEGER NOT NULL,
+    "year" INTEGER NOT NULL,
+    "saldoAnterior" DOUBLE PRECISION NOT NULL,
+    "entradas" DOUBLE PRECISION NOT NULL,
+    "gastos" DOUBLE PRECISION NOT NULL,
+    "saldoMensal" DOUBLE PRECISION NOT NULL,
+    "saldoAtual" DOUBLE PRECISION NOT NULL,
+    "patrimonio" DOUBLE PRECISION NOT NULL,
+    "churchId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "FinanceSummary_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "Church_addressChurchId_key" ON "Church"("addressChurchId");
 
@@ -131,6 +149,9 @@ CREATE INDEX "Finance_contributorMemberId_idx" ON "Finance"("contributorMemberId
 
 -- CreateIndex
 CREATE UNIQUE INDEX "Diary_churchId_key" ON "Diary"("churchId");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "FinanceSummary_month_year_churchId_key" ON "FinanceSummary"("month", "year", "churchId");
 
 -- AddForeignKey
 ALTER TABLE "Church" ADD CONSTRAINT "Church_parentChurchId_fkey" FOREIGN KEY ("parentChurchId") REFERENCES "Church"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -161,3 +182,6 @@ ALTER TABLE "Diary" ADD CONSTRAINT "Diary_churchId_fkey" FOREIGN KEY ("churchId"
 
 -- AddForeignKey
 ALTER TABLE "Event" ADD CONSTRAINT "Event_diaryId_fkey" FOREIGN KEY ("diaryId") REFERENCES "Diary"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "FinanceSummary" ADD CONSTRAINT "FinanceSummary_churchId_fkey" FOREIGN KEY ("churchId") REFERENCES "Church"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
