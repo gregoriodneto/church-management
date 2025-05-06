@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateFinanceDto } from './dto/create-finance.dto';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
 import { PrismaService } from 'prisma/prisma.service';
-import { TypeContribution } from '@prisma/client';
+import { Finance, TypeContribution } from '@prisma/client';
 
 @Injectable()
 export class FinancesService {
@@ -14,7 +14,13 @@ export class FinancesService {
     const year = now.getFullYear();
 
     // Cria o lançamento
-    const finance = await this.prisma.finance.create({ data });
+    const dto = {
+      description: data.description,
+      value: data.value,
+      receiverChurchId: data.churchId,
+      contributorMemberId: data.memberId
+    };
+    const finance = await this.prisma.finance.create({ data: dto });
 
     const isEntrada = this.isEntradaType(data.description);
 
