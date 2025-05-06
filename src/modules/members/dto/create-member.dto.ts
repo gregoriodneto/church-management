@@ -51,22 +51,6 @@ export class CreateMemberDto {
     churchDepartament?: ChurchDepartament[];
 
     @ApiPropertyOptional({
-        example: 'c3f2f807-12d3-4e83-b7b5-1d8f5367eac4',
-        description: 'ID do endereço associado ao membro (opcional)',
-    })
-    @IsOptional()
-    @IsUUID()
-    addressMemberId?: string;
-
-    @ApiPropertyOptional({
-        example: 'a8f9e0b5-d0d9-4a9f-927e-6e8619dd7980',
-        description: 'ID do contato associado ao membro (opcional)',
-    })
-    @IsOptional()
-    @IsUUID()
-    contactMemberId: string;
-
-    @ApiPropertyOptional({
         example: 'a8f9e0b5-d0d9-4a9f-927e-6e8619dd7980',
         description: 'ID da igreja associado ao membro (opcional)',
     })

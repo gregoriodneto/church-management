@@ -29,13 +29,13 @@ export class MembersService {
           data: {
             name: data.name,
             age: age,
-            dateOfBirth: data.dateOfBirth,
+            dateOfBirth: new Date(data.dateOfBirth),
             addressMemberId: address.id,
             contactMemberId: contact.id,
             churchDepartament: data.churchDepartament,
             churchMember: data.churchMember,
             churchMinistry: data.churchMinistry,
-            churchMemberId: 'faef35e3-608c-494e-b309-659510dbcd44'
+            churchMemberId: data.churchMemberId
           }
         });
   
