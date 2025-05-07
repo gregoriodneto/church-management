@@ -53,6 +53,19 @@ CREATE TABLE "Member" (
 );
 
 -- CreateTable
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "email" TEXT NOT NULL,
+    "password" TEXT NOT NULL,
+    "memberId" TEXT,
+    "churchId" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "Finance" (
     "id" TEXT NOT NULL,
     "description" "TypeContribution" NOT NULL,
@@ -142,6 +155,12 @@ CREATE UNIQUE INDEX "Church_addressChurchId_key" ON "Church"("addressChurchId");
 CREATE UNIQUE INDEX "Church_contactChurchId_key" ON "Church"("contactChurchId");
 
 -- CreateIndex
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "User_memberId_key" ON "User"("memberId");
+
+-- CreateIndex
 CREATE INDEX "Finance_receiverChurchId_idx" ON "Finance"("receiverChurchId");
 
 -- CreateIndex
@@ -170,6 +189,12 @@ ALTER TABLE "Member" ADD CONSTRAINT "Member_contactMemberId_fkey" FOREIGN KEY ("
 
 -- AddForeignKey
 ALTER TABLE "Member" ADD CONSTRAINT "Member_churchMemberId_fkey" FOREIGN KEY ("churchMemberId") REFERENCES "Church"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "User" ADD CONSTRAINT "User_churchId_fkey" FOREIGN KEY ("churchId") REFERENCES "Church"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Finance" ADD CONSTRAINT "Finance_receiverChurchId_fkey" FOREIGN KEY ("receiverChurchId") REFERENCES "Church"("id") ON DELETE SET NULL ON UPDATE CASCADE;

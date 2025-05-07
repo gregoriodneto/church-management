@@ -14,7 +14,7 @@ async function bootstrap() {
     .setTitle('API da Church Management')
     .setDescription('Documentação da API de gerenciamento de Igrejas')
     .setVersion('1.0')
-    //.addBearerAuth()
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

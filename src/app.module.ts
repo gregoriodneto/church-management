@@ -9,13 +9,15 @@ import { ContactModule } from './modules/contact/contact.module';
 import { AddressModule } from './modules/address/address.module';
 import { DiaryModule } from './modules/diary/diary.module';
 import { EventModule } from './modules/event/event.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
     ChurchModule, 
     DashboardModule, 
     FinancesModule, 
-    MembersModule, AddressModule, ContactModule, DiaryModule, EventModule
+    MembersModule, AddressModule, ContactModule, DiaryModule, EventModule, AuthModule, UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

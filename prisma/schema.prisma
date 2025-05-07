@@ -8,153 +8,173 @@ datasource db {
 }
 
 model Church {
-  id                String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  name              String  
-  foundationDate    DateTime  
-  role              ChurchRole?
+  name           String
+  foundationDate DateTime
+  role           ChurchRole?
 
-  parentChurchId    String?
-  parentChurch      Church?       @relation("ChurchRelations", fields: [parentChurchId], references: [id])
-  relatedChurches   Church[]      @relation("ChurchRelations")
+  parentChurchId  String?
+  parentChurch    Church?  @relation("ChurchRelations", fields: [parentChurchId], references: [id])
+  relatedChurches Church[] @relation("ChurchRelations")
 
-  addressChurchId   String?       @unique
-  address           Address?      @relation("AddressChurch", fields: [addressChurchId], references: [id])
+  addressChurchId String?  @unique
+  address         Address? @relation("AddressChurch", fields: [addressChurchId], references: [id])
 
-  contactChurchId   String?       @unique   
-  contact           Contact?      @relation("ContactChurch", fields: [contactChurchId], references: [id])
+  contactChurchId String?  @unique
+  contact         Contact? @relation("ContactChurch", fields: [contactChurchId], references: [id])
 
-  churchFinance     Finance[]     @relation("FinanceChurch")
+  churchFinance Finance[] @relation("FinanceChurch")
 
-  churchDiary       Diary?        @relation("ChurchDiary")
+  churchDiary Diary? @relation("ChurchDiary")
 
-  churchMember      Member[]     @relation("ChurchMember")
+  churchMember Member[] @relation("ChurchMember")
 
-  churchFinanceSummary     FinanceSummary[]
+  churchFinanceSummary FinanceSummary[]
 
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  churchUser User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Member {
-  id                    String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  name                  String
-  dateOfBirth           DateTime
-  age                   Int
-  churchMember          ChurchMember[]
-  churchMinistry        ChurchMinistry[]
-  churchDepartament     ChurchDepartament[]
+  name              String
+  dateOfBirth       DateTime
+  age               Int
+  churchMember      ChurchMember[]
+  churchMinistry    ChurchMinistry[]
+  churchDepartament ChurchDepartament[]
 
-  addressMemberId       String?
-  address               Address?      @relation("AddressMember", fields: [addressMemberId], references: [id])
+  addressMemberId String?
+  address         Address? @relation("AddressMember", fields: [addressMemberId], references: [id])
 
-  contactMemberId       String?     
-  contact               Contact?      @relation("ContactMember", fields: [contactMemberId], references: [id])
+  contactMemberId String?
+  contact         Contact? @relation("ContactMember", fields: [contactMemberId], references: [id])
 
-  churchMemberId        String?
-  church                Church?      @relation("ChurchMember", fields: [churchMemberId], references: [id])
+  churchMemberId String?
+  church         Church? @relation("ChurchMember", fields: [churchMemberId], references: [id])
 
-  memberFinance         Finance[]     @relation("FinanceMember")
+  memberFinance Finance[] @relation("FinanceMember")
 
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  memberUser User? @relation("MemberToUser")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model User {
+  id String @id @default(uuid())
+
+  email    String @unique
+  password String
+
+  memberId String? @unique
+  member   Member? @relation("MemberToUser", fields: [memberId], references: [id])
+
+  churchId String
+  church   Church @relation(fields: [churchId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Finance {
-  id                    String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  description           TypeContribution
-  value                 Float
+  description TypeContribution
+  value       Float
 
-  receiverChurchId      String?
-  church                Church?       @relation("FinanceChurch", fields: [receiverChurchId], references: [id])
+  receiverChurchId String?
+  church           Church? @relation("FinanceChurch", fields: [receiverChurchId], references: [id])
 
-  contributorMemberId   String?
-  member                Member?       @relation("FinanceMember", fields: [contributorMemberId], references: [id])
+  contributorMemberId String?
+  member              Member? @relation("FinanceMember", fields: [contributorMemberId], references: [id])
 
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([receiverChurchId])
   @@index([contributorMemberId])
 }
 
 model Diary {
-  id                    String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  churchId              String?       @unique
-  church                Church?       @relation("ChurchDiary", fields: [churchId], references: [id])
+  churchId String? @unique
+  church   Church? @relation("ChurchDiary", fields: [churchId], references: [id])
 
-  diaryEvent            Event[]       @relation("EventDiary")
+  diaryEvent Event[] @relation("EventDiary")
 
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Event {
-  id                    String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  title                 String
-  description           String
-  date                  DateTime
-  location              String?
-  isPublic              Boolean @default(false)
-  type                  TypeEvent[]  
-  status                StatusEvent?
+  title       String
+  description String
+  date        DateTime
+  location    String?
+  isPublic    Boolean      @default(false)
+  type        TypeEvent[]
+  status      StatusEvent?
 
-  diaryId               String?
-  diary                 Diary?       @relation("EventDiary", fields: [diaryId], references: [id])
+  diaryId String?
+  diary   Diary?  @relation("EventDiary", fields: [diaryId], references: [id])
 
-  createdAt             DateTime      @default(now())
-  updatedAt             DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Address {
-  id                String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  street            String
-  numberStreet      String
-  district          String
-  city              String
-  state             String  
+  street       String
+  numberStreet String
+  district     String
+  city         String
+  state        String
 
-  churchAddress     Church?       @relation("AddressChurch")
-  memberAddress     Member[]      @relation("AddressMember")
+  churchAddress Church?  @relation("AddressChurch")
+  memberAddress Member[] @relation("AddressMember")
 
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Contact {
-  id                String        @id @default(uuid())
+  id String @id @default(uuid())
 
-  numberContact     String[]
-  email             String?
+  numberContact String[]
+  email         String?
 
-  memberContact     Member[]      @relation("ContactMember")
-  churchContact     Church?      @relation("ContactChurch")
+  memberContact Member[] @relation("ContactMember")
+  churchContact Church?  @relation("ContactChurch")
 
-  createdAt         DateTime      @default(now())
-  updatedAt         DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model FinanceSummary {
-  id              String   @id @default(uuid())
-  month           Int
-  year            Int
-  saldoAnterior   Float
-  entradas        Float
-  gastos          Float
-  saldoMensal     Float
-  saldoAtual      Float
-  patrimonio      Float
+  id            String @id @default(uuid())
+  month         Int
+  year          Int
+  saldoAnterior Float
+  entradas      Float
+  gastos        Float
+  saldoMensal   Float
+  saldoAtual    Float
+  patrimonio    Float
 
-  churchId        String
-  church          Church   @relation(fields: [churchId], references: [id])
+  churchId String
+  church   Church @relation(fields: [churchId], references: [id])
 
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([month, year, churchId])
 }
@@ -175,11 +195,11 @@ enum TypeContribution {
 }
 
 enum ChurchMember {
-  NONE  
+  NONE
   LIDER
   REGENTE
   MUSICO
-  PREGADOR  
+  PREGADOR
   LIMPEZA
   FINANCEIRO
   SECRETARIO

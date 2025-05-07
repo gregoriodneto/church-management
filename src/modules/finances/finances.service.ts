@@ -8,7 +8,7 @@ import { Finance, TypeContribution } from '@prisma/client';
 export class FinancesService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateFinanceDto) {
+  async create(data: CreateFinanceDto, churchId: string) {
     const now = new Date();
     const month = now.getMonth() + 1;
     const year = now.getFullYear();
@@ -17,7 +17,7 @@ export class FinancesService {
     const dto = {
       description: data.description,
       value: data.value,
-      receiverChurchId: data.churchId,
+      receiverChurchId: churchId,
       contributorMemberId: data.memberId
     };
     const finance = await this.prisma.finance.create({ data: dto });

@@ -1,15 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { FinancesService } from './finances.service';
 import { CreateFinanceDto } from './dto/create-finance.dto';
 import { UpdateFinanceDto } from './dto/update-finance.dto';
+import { JwtGuard } from '../auth/jwt.guard';
+import { CurrentUser } from '../auth/decorators';
 
 @Controller('finances')
 export class FinancesController {
   constructor(private readonly financesService: FinancesService) {}
 
   @Post()
-  create(@Body() createFinanceDto: CreateFinanceDto) {
-    return this.financesService.create(createFinanceDto);
+  @UseGuards(JwtGuard)
+  create(
+    @CurrentUser() user,
+    @Body() createFinanceDto: CreateFinanceDto
+  ) {
+    return this.financesService.create(createFinanceDto, user.churchId);
   }
 
   @Get()
