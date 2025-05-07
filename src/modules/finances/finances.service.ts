@@ -85,9 +85,9 @@ export class FinancesService {
     });
   }
 
-  findAllFinanceSummary(churchId: string) {
+  findAllFinanceSummary(churchId: string, month: number, year: number) {
     return this.prisma.financeSummary.findMany({ 
-      where: { churchId },
+      where: { churchId, month: month, year },
       include: {
         church: true
       }

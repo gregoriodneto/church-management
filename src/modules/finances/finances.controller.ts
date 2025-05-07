@@ -21,9 +21,11 @@ export class FinancesController {
 
   @Get('/finance-summary')
   findAllFinanceSummary(
-    @Query('churchId') churchId: string
+    @Query('churchId') churchId: string,
+    @Query('month') month: string,
+    @Query('year') year: string
   ) {
-    return this.financesService.findAllFinanceSummary(churchId);
+    return this.financesService.findAllFinanceSummary(churchId, +month, +year);
   }
 
   @Get(':id')
