@@ -17,15 +17,7 @@ export class CreateFinanceDto {
     })
     @IsNumber()
     value: number;
-
-    @ApiPropertyOptional({
-        example: 'd8b9f76e-9272-4f59-83f7-88d92ea4322c',
-        description: 'ID da igreja recebedora (opcional)',
-    })
-    @IsOptional()
-    @IsUUID()
-    churchId?: string;
-
+    
     @ApiPropertyOptional({
         example: 'bdc6fa47-fdf2-4f3d-b249-9eec7c843f3f',
         description: 'ID do membro contribuinte (opcional)',

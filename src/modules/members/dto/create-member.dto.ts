@@ -50,14 +50,6 @@ export class CreateMemberDto {
     @IsEnum(ChurchDepartament, { each: true })
     churchDepartament?: ChurchDepartament[];
 
-    @ApiPropertyOptional({
-        example: 'a8f9e0b5-d0d9-4a9f-927e-6e8619dd7980',
-        description: 'ID da igreja associado ao membro (opcional)',
-    })
-    @IsOptional()
-    @IsUUID()
-    churchMemberId: string;
-
     @ApiProperty()
     @ValidateNested()
     @Type(() => CreateAddressDto)

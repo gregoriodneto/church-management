@@ -1,20 +1,29 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseGuards } from '@nestjs/common';
 import { ChurchService } from './church.service';
 import { CreateChurchDto } from './dto/create-church.dto';
 import { UpdateChurchDto } from './dto/update-church.dto';
+import { JwtGuard } from '../auth/jwt.guard';
+import { CurrentUser } from '../auth/decorators';
 
 @Controller('church')
 export class ChurchController {
   constructor(private readonly churchService: ChurchService) {}
 
   @Post()
-  create(@Body() createChurchDto: CreateChurchDto) {
-    return this.churchService.create(createChurchDto);
+  @UseGuards(JwtGuard)
+  create(
+    @CurrentUser() user,
+    @Body() createChurchDto: CreateChurchDto)
+  {
+    return this.churchService.create(createChurchDto, user.churchId);
   }
 
   @Get()
-  findAll() {
-    return this.churchService.findAll();
+  @UseGuards(JwtGuard)
+  findAll(
+    @CurrentUser() user,
+  ) {
+    return this.churchService.findAll(user.churchId);
   }
 
   @Get(':id')

@@ -26,20 +26,20 @@ export class FinancesService {
 
     const isGasto = this.isGastoType(data.description);
 
-    if (data.churchId && (isEntrada || isGasto)) {
+    if (churchId && (isEntrada || isGasto)) {
       const summary = await this.prisma.financeSummary.upsert({
         where: {
           month_year_churchId: {
             month,
             year,
-            churchId: data.churchId,
+            churchId: churchId,
           },
         },
         update: {},
         create: {
           month,
           year,
-          churchId: data.churchId,
+          churchId: churchId,
           saldoAnterior: 0,
           entradas: 0,
           gastos: 0,

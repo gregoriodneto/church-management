@@ -19,19 +19,21 @@ export class FinancesController {
   }
 
   @Get()
-  findAll(
-    @Query('churchId') churchId: string
+  @UseGuards(JwtGuard)
+  findAll(    
+    @CurrentUser() user,
   ) {
-    return this.financesService.findAll(churchId);
+    return this.financesService.findAll(user.churchId);
   }
 
   @Get('/finance-summary')
+  @UseGuards(JwtGuard)
   findAllFinanceSummary(
-    @Query('churchId') churchId: string,
+    @CurrentUser() user,
     @Query('month') month: string,
     @Query('year') year: string
   ) {
-    return this.financesService.findAllFinanceSummary(churchId, +month, +year);
+    return this.financesService.findAllFinanceSummary(user.churchId, +month, +year);
   }
 
   @Get(':id')

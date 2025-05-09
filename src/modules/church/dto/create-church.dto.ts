@@ -22,11 +22,6 @@ export class CreateChurchDto {
     @ApiPropertyOptional({ example: "934256a6-0217-4d2a-b842-6772e9761af4" })
     @IsOptional()
     @IsUUID()
-    parentChurchId?: string;
-
-    @ApiPropertyOptional({ example: "934256a6-0217-4d2a-b842-6772e9761af4" })
-    @IsOptional()
-    @IsUUID()
     addressChurchId?: string;
 
     @ApiProperty()

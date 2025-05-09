@@ -11,9 +11,9 @@ export class UserService {
     private readonly hashService: HashService
   ) {}
 
-  async createFromMember(dto: CreateUserDto) {
+  async createFromMember(dto: CreateUserDto, churchId: string) {
     const member = await this.prisma.member.findUnique({
-      where: { id: dto.memberId }
+      where: { id: dto.memberId, churchMemberId: churchId }
     });
 
     if (!member) {
@@ -30,10 +30,6 @@ export class UserService {
         churchId: member.churchMemberId!
       }
     });
-  }
-
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
   }
 
   findAll() {

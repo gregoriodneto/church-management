@@ -9,13 +9,13 @@ import { Prisma } from '@prisma/client';
 export class MembersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async create(data: CreateMemberDto) {
+  async create(data: CreateMemberDto, churchId: string) {
     const age = calculateAge(data.dateOfBirth);
     
     try {
       return this.prisma.$transaction(async (tx) => {
         const address = await tx.address.create({
-          data: data.address
+          data: data.address,
         })
   
         const contact = await tx.contact.create({
@@ -35,7 +35,7 @@ export class MembersService {
             churchDepartament: data.churchDepartament,
             churchMember: data.churchMember,
             churchMinistry: data.churchMinistry,
-            churchMemberId: data.churchMemberId
+            churchMemberId: churchId
           }
         });
   
@@ -51,18 +51,18 @@ export class MembersService {
     }
   }
 
-  findAll() {
-    return this.prisma.member.findMany();
+  findAll(churchId: string) {
+    return this.prisma.member.findMany({ where: { churchMemberId: churchId } });
   }
 
-  findOne(id: string) {
-    return this.prisma.member.findUnique({ where: { id } });
+  findOne(id: string, churchId: string) {
+    return this.prisma.member.findUnique({ where: { id, churchMemberId: churchId } });
   }
 
-  async update(id: string, data: UpdateMemberDto) {
+  async update(id: string, churchId: string, data: UpdateMemberDto) {
     return this.prisma.$transaction(async (tx) => {
       const member = await this.prisma.member.findUnique({
-        where: { id },
+        where: { id, churchMemberId: churchId },
         include: {
           address: true,
           contact: true,
@@ -98,7 +98,7 @@ export class MembersService {
     });
   }
 
-  remove(id: string) {
-    return this.prisma.member.delete({ where: { id } });
+  remove(id: string, churchId: string) {
+    return this.prisma.member.delete({ where: { id, churchMemberId: churchId} });
   }
 }

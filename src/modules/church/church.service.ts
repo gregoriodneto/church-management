@@ -7,8 +7,8 @@ import { PrismaService } from 'prisma/prisma.service';
 export class ChurchService {
   constructor(private prisma: PrismaService) {}
 
-  async create(data: CreateChurchDto) {
-    if (data.role !== 'MATRIZ' && !data.parentChurchId) {
+  async create(data: CreateChurchDto, churchId: string) {
+    if (data.role !== 'MATRIZ' && !churchId) {
       throw new NotFoundException('Como não é Matriz, informar uma Matriz!');
     }
     return this.prisma.$transaction(async (tx) => {
@@ -28,7 +28,7 @@ export class ChurchService {
           name: data.name,
           foundationDate: new Date(data.foundationDate),
           role: data.role,
-          parentChurchId: data.parentChurchId ?? null,
+          parentChurchId: churchId ?? null,
           addressChurchId: address.id,
           contactChurchId: contact.id
         }
@@ -38,8 +38,15 @@ export class ChurchService {
     });
   }
 
-  findAll() {
-    return this.prisma.church.findMany();
+  findAll(churchId: string) {
+    return this.prisma.church.findMany({ 
+      where: {
+        OR: [
+          { id: churchId },
+          { parentChurchId: churchId }
+        ]
+      }
+    });
   }
 
   findOne(id: string) {
