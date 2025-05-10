@@ -1,4 +1,4 @@
-import { IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
+import { IsBoolean, IsDateString, IsEnum, IsNumber, IsOptional, IsString, IsUUID, ValidateNested } from 'class-validator';
 import { ChurchMinistry, ChurchMember, ChurchDepartament } from '@prisma/client';
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
@@ -59,4 +59,18 @@ export class CreateMemberDto {
     @ValidateNested()
     @Type(() => CreateContactDto)
     contact: CreateContactDto;
+
+    @ApiProperty({
+        example: true,
+        description: 'O Membro será um Usuário?',
+    })
+    @IsBoolean()
+    isUser: boolean;
+
+    @ApiProperty({
+        example: 'joao123',
+        description: 'Senha do usuario',
+    })
+    @IsString()
+    password: string;
 }

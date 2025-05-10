@@ -9,15 +9,6 @@ import { CurrentUser } from '../auth/decorators';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  @UseGuards(JwtGuard)
-  createFromMember(
-    @CurrentUser() user,
-    @Body() createUserDto: CreateUserDto
-  ) {
-    return this.userService.createFromMember(createUserDto, user.churchId);
-  }
-
   @Get()
   findAll() {
     return this.userService.findAll();

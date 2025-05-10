@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PrismaService } from 'prisma/prisma.service';
 import { HashService } from 'src/common/hashes/hashe-service';
+import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class UserService {
@@ -11,9 +12,9 @@ export class UserService {
     private readonly hashService: HashService
   ) {}
 
-  async createFromMember(dto: CreateUserDto, churchId: string) {
-    const member = await this.prisma.member.findUnique({
-      where: { id: dto.memberId, churchMemberId: churchId }
+  async createFromMember(tx: Prisma.TransactionClient, dto: CreateUserDto) {
+    const member = await tx.member.findUnique({
+      where: { id: dto.memberId }
     });
 
     if (!member) {
@@ -22,7 +23,7 @@ export class UserService {
 
     const hashedPassword = await this.hashService.hash(dto.password);
 
-    return this.prisma.user.create({
+    return tx.user.create({
       data: {
         email: dto.email,
         password: hashedPassword,

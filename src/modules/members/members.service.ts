@@ -4,10 +4,15 @@ import { UpdateMemberDto } from './dto/update-member.dto';
 import { PrismaService } from 'prisma/prisma.service';
 import { calculateAge } from 'src/common/date.util';
 import { Prisma } from '@prisma/client';
+import { UserService } from '../user/user.service';
+import { CreateUserDto } from '../user/dto/create-user.dto';
 
 @Injectable()
 export class MembersService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly userService: UserService
+  ) {}
 
   async create(data: CreateMemberDto, churchId: string) {
     const age = calculateAge(data.dateOfBirth);
@@ -38,6 +43,16 @@ export class MembersService {
             churchMemberId: churchId
           }
         });
+
+        if (data.isUser) {
+          const dtoUser = {
+            email: contact.email,
+            password: data.password,
+            memberId: member.id
+          } as CreateUserDto;
+
+          await this.userService.createFromMember(tx, dtoUser);
+        }
   
         return member;
       });
